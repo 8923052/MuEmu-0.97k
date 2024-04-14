@@ -7,5 +7,3 @@ bin/
 *.suo
 *.pdb
 *.map
-*.exp
-*.lib
