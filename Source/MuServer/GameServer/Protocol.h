@@ -568,6 +568,15 @@ struct PMSG_NEW_CHARACTER_CALC_SEND
 	DWORD ViewMaxBP;
 	DWORD ViewPhysiSpeed;
 	DWORD ViewMagicSpeed;
+	DWORD ViewPhysiDamageMin;
+	DWORD ViewPhysiDamageMax;
+	DWORD ViewMagicDamageMin;
+	DWORD ViewMagicDamageMax;
+	DWORD ViewMagicDamageRate;
+	DWORD ViewAttackSuccessRate;
+	DWORD ViewDamageMultiplier;
+	DWORD ViewDefense;
+	DWORD ViewDefenseSuccessRate;
 };
 
 struct PMSG_HEALTH_BAR_SEND
@@ -712,4 +721,4 @@ void GCNewCharacterInfoSend(LPOBJ lpObj);
 
 void GCNewCharacterCalcSend(LPOBJ lpObj);
 
-void GCHealthBarSend(LPOBJ lpObj);
+void GCHealthBarSend(int aIndex);

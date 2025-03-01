@@ -121,10 +121,6 @@ public:
 	int m_GuildWarWinPointsGain_Max;
 	int m_GuildWarWinPointsGain_Half;
 	int m_GuildWarWinPointsGain_Normal;
-	int m_GoldenArcherRewardSwitch;
-	int m_GoldenArcherMinRenas;
-	int m_GoldenArcherMinStones;
-	int m_GoldenArcherRewardItemIndex;
 	int m_AddExperienceRate[MAX_ACCOUNT_LEVEL];
 	int m_AddEventExperienceRate[MAX_ACCOUNT_LEVEL];
 	int m_ItemDropTime;
@@ -185,6 +181,9 @@ public:
 	int m_FlyingDragonsSwitch;
 	int m_FlyingDragonsOnlyBossMapSpawn;
 	int m_FlyingDragonsKillBossDisappear;
+	int m_GoldenArcherBingoEvent;
+	int m_GoldenArcherWinnersAmount;
+	int m_GoldenArcherDeleteRegistered;
 	// Chaos Mix
 	int m_ChaosItemMixRate[MAX_ACCOUNT_LEVEL];
 	int m_ChaosItemMixCost[MAX_ACCOUNT_LEVEL];
@@ -238,8 +237,8 @@ public:
 	int m_PetUniriaEnableStuck;
 	int m_PetDinorantEnableStuck;
 	int m_DamageStuckRate[MAX_CLASS];
-	int m_DKDamageMultiplierConstA;
-	int m_DKDamageMultiplierMaxRate;
+	int m_DamageMultiplierConstA[MAX_CLASS];
+	int m_DamageMultiplierMaxRate[MAX_CLASS];
 	int m_SatanIncDamageConstA;
 	int m_DinorantIncDamageConstA;
 	int m_AngelDecDamageConstA;

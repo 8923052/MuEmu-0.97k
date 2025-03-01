@@ -19,10 +19,12 @@ struct MAIN_FILE_INFO
 	char ClientSerial[17];
 	char ClientVersion[8];
 	BYTE MultiInstanceBlock;
-	char WindowName[32];
-	char ScreenShotPath[50];
-	char ClientName[32];
-	char PluginName[32];
+	char WindowName[128];
+	char ScreenShotPath[256];
+	BYTE DisableResets;
+	BYTE DisableGrandResets;
+	char ClientName[128];
+	char PluginName[128];
 	DWORD ClientCRC32;
 	DWORD PluginCRC32;
 	DWORD ReconnectTime;

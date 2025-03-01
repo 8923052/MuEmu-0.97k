@@ -11,6 +11,7 @@
 #include "EffectManager.h"
 #include "Filter.h"
 #include "Fruit.h"
+#include "GoldenArcher.h"
 #include "Guild.h"
 #include "GuildManager.h"
 #include "HackPacketCheck.h"
@@ -396,14 +397,29 @@ void ProtocolCore(BYTE head, BYTE* lpMsg, int size, int aIndex, int encrypt, int
 
 		case 0x95:
 		{
-			gNpcTalk.NpcGoldenArcherRegisterCount((PMSG_GOLDEN_ARCHER_REG_COUNT*)lpMsg, aIndex);
+			gGoldenArcher.CGGoldenArcherRegisterRecv((PMSG_GOLDEN_ARCHER_REGISTER_RECV*)lpMsg, aIndex);
 
 			break;
 		}
 
 		case 0x97:
 		{
-			gNpcTalk.CGNpcTalkCloseRecv(aIndex);
+			switch (((lpMsg[0] == 0xC1) ? lpMsg[3] : lpMsg[4]))
+			{
+				case 0x02:
+				{
+					gGoldenArcher.CGGoldenArcherExchangeRecv((PMSG_GOLDEN_ARCHER_EXCHANGE_RECV*)lpMsg, aIndex);
+
+					break;
+				}
+
+				case 0x03:
+				{
+					gGoldenArcher.CGGoldenArcherRegisterLuckyRecv((PMSG_GOLDEN_ARCHER_REGISTER_LUCKY_RECV*)lpMsg, aIndex);
+
+					break;
+				}
+			}
 
 			break;
 		}
@@ -417,7 +433,7 @@ void ProtocolCore(BYTE head, BYTE* lpMsg, int size, int aIndex, int encrypt, int
 
 		case 0x9D:
 		{
-			gNpcTalk.NpcGoldenArcherRegisterLuckyNumber((PMSG_GOLDEN_ARCHER_REG_LUCKYNUM*)lpMsg, aIndex);
+			gGoldenArcher.CGGoldenArcherExchangeLuckyRecv((PMSG_GOLDEN_ARCHER_EXCHANGE_LUCKY_RECV*)lpMsg, aIndex);
 
 			break;
 		}
@@ -2184,17 +2200,31 @@ void GCNewCharacterCalcSend(LPOBJ lpObj)
 
 	pMsg.ViewMagicSpeed = lpObj->MagicSpeed;
 
+	gAttack.GetPreviewPhysiDamage(lpObj, &pMsg.ViewPhysiDamageMin, &pMsg.ViewPhysiDamageMax);
+
+	gAttack.GetPreviewMagicDamage(lpObj, &pMsg.ViewMagicDamageMin, &pMsg.ViewMagicDamageMax, &pMsg.ViewMagicDamageRate);
+
+	pMsg.ViewAttackSuccessRate = lpObj->AttackSuccessRate;
+
+	pMsg.ViewDamageMultiplier = lpObj->DamageMultiplierRate;
+
+	gAttack.GetPreviewDefense(lpObj, &pMsg.ViewDefense);
+
+	pMsg.ViewDefenseSuccessRate = lpObj->DefenseSuccessRate;
+
 	DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 
 #endif
 }
 
-void GCHealthBarSend(LPOBJ lpObj)
+void GCHealthBarSend(int aIndex)
 {
 	if (gServerInfo.m_MonsterHealthBarSwitch == 0)
 	{
 		return;
 	}
+
+	LPOBJ lpObj = &gObj[aIndex];
 
 	BYTE send[4096];
 

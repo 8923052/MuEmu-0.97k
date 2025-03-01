@@ -19,10 +19,12 @@ struct MAIN_FILE_INFO
 	char ClientSerial[17];
 	char ClientVersion[8];
 	BYTE MultiInstanceBlock;
-	char WindowName[32];
-	char ScreenShotPath[50];
-	char ClientName[32];
-	char PluginName[32];
+	char WindowName[128];
+	char ScreenShotPath[256];
+	BYTE DisableResets;
+	BYTE DisableGrandResets;
+	char ClientName[128];
+	char PluginName[128];
 	DWORD ClientCRC32;
 	DWORD PluginCRC32;
 	DWORD ReconnectTime;
@@ -66,6 +68,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	info.MultiInstanceBlock = GetPrivateProfileInt("ClientInfo", "BlockMultiInstance", 0, ".\\MainInfo.ini");
 	GetPrivateProfileString("ClientInfo", "WindowName", "", info.WindowName, sizeof(info.WindowName), ".\\MainInfo.ini");
 	GetPrivateProfileString("ClientInfo", "ScreenShotPath", "", info.ScreenShotPath, sizeof(info.ScreenShotPath), ".\\MainInfo.ini");
+	info.DisableResets = GetPrivateProfileInt("ClientInfo", "DisableResets", 0, ".\\MainInfo.ini");
+	info.DisableGrandResets = GetPrivateProfileInt("ClientInfo", "DisableGrandResets", 0, ".\\MainInfo.ini");
 
 	GetPrivateProfileString("CheckCRC", "ClientName", "", info.ClientName, sizeof(info.ClientName), ".\\MainInfo.ini");
 	GetPrivateProfileString("CheckCRC", "PluginName", "", info.PluginName, sizeof(info.PluginName), ".\\MainInfo.ini");
