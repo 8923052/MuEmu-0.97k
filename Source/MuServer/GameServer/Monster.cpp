@@ -1538,6 +1538,19 @@ void gObjMonsterProcess(LPOBJ lpObj)
 
 	if (lpObj->ActionState.Move != 0)
 	{
+		if (lpObj->TargetNumber < 0 && lpObj->MTX == 0 && lpObj->MTY == 0)
+		{
+			lpObj->MTX = 0;
+			lpObj->MTY = 0;
+			lpObj->ActionState.Move = 0;
+			lpObj->ActionState.Attack = 0;
+			lpObj->ActionState.Emotion = 3;
+			lpObj->ActionState.EmotionCount = 10;
+			lpObj->TargetNumber = -1;
+			lpObj->NextActionTime = 800;
+			return;
+		}
+
 		if (PathFindMoveMsgSend(lpObj) == TRUE)
 		{
 			lpObj->ActionState.Move = (DWORD)0;
@@ -1546,8 +1559,14 @@ void gObjMonsterProcess(LPOBJ lpObj)
 		}
 		else
 		{
-			lpObj->ActionState.Move = (DWORD)1;
-
+			lpObj->MTX = 0;
+			lpObj->MTY = 0;
+			lpObj->ActionState.Move = 0;
+			lpObj->ActionState.Attack = 0;
+			lpObj->ActionState.Emotion = 3;
+			lpObj->ActionState.EmotionCount = 10;
+			lpObj->TargetNumber = -1;
+			lpObj->NextActionTime = 800;
 			return;
 		}
 	}
@@ -1978,15 +1997,40 @@ void gObjMonsterBaseAct(LPOBJ lpObj)
 				}
 				else
 				{
+					if (gObjMonsterGetTargetPos(lpObj) == TRUE && !(lpObj->MTX == 0 && lpObj->MTY == 0))
+					{
+						PATH_INFO path;
+
+						if (gMap[lpObj->Map].PathFinding2(lpObj->X, lpObj->Y, lpObj->MTX, lpObj->MTY, &path) == TRUE)
+						{
+							lpObj->ActionState.Attack = 0;
+							lpObj->ActionState.Move = 1;
+							lpObj->ActionState.Emotion = 1;
+							lpObj->NextActionTime = 400;
+							lpObj->Dir = GetPathPacketDirPos(lpTargetObj->X - lpObj->X, lpTargetObj->Y - lpObj->Y);
+							return;
+						}
+
+						lpObj->MTX = 0;
+						lpObj->MTY = 0;
+						lpObj->TargetNumber = -1;
+						lpObj->ActionState.Attack = 0;
+						lpObj->ActionState.Move = 0;
+						lpObj->ActionState.Emotion = 3;
+						lpObj->ActionState.EmotionCount = 10;
+						lpObj->NextActionTime = 800;
+						return;
+					}
+
+					lpObj->MTX = 0;
+					lpObj->MTY = 0;
 					lpObj->TargetNumber = -1;
-
 					lpObj->ActionState.Attack = 0;
-
-					lpObj->NextActionTime = 500;
-
-					lpObj->ActionState.Emotion = 0;
-
-					lpObj->ActionState.Move = 1;
+					lpObj->ActionState.Move = 0;
+					lpObj->ActionState.Emotion = 3;
+					lpObj->ActionState.EmotionCount = 10;
+					lpObj->NextActionTime = 800;
+					return;
 				}
 			}
 			else

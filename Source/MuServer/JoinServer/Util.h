@@ -11,7 +11,7 @@ void ConsoleProtocolLog(int type, BYTE* lpMsg, int size);
 
 bool CheckTextSyntax(char* text, int size);
 
-LONG CheckAccountCaseSensitive(int value);
+char CheckAccountCaseSensitive(char value);
 
 int GetFreeServerIndex();
 

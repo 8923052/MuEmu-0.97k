@@ -470,8 +470,6 @@ void SetLargeRand()
 
 long GetLargeRand()
 {
-	uuid_vector_t;
-
 	return dist(seed);
 }
 

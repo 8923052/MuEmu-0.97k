@@ -95,16 +95,11 @@ bool CheckTextSyntax(char* text, int size)
 	return true;
 }
 
-LONG CheckAccountCaseSensitive(int value)
+char CheckAccountCaseSensitive(char value)
 {
-	if (CaseSensitive == 0)
-	{
-		return tolower(value);
-	}
-	else
-	{
-		return value;
-	}
+	return (CaseSensitive == 0)
+		? static_cast<char>(tolower(static_cast<unsigned char>(value)))
+		: value;
 }
 
 int GetFreeServerIndex()
