@@ -61,7 +61,7 @@ void CItemPosition::MyRenderItem3D(float sx, float sy, float Width, float Height
 {
 	bool Success = false;
 
-	if ((!*(DWORD*)0x7E91388 || PickUp) && IsWorkZone((int)sx, (int)sy, (int)Width, (int)Height))
+	if ((!pPickedItem->Key || PickUp) && IsWorkZone((int)sx, (int)sy, (int)Width, (int)Height))
 	{
 		Success = true;
 	}
@@ -453,7 +453,10 @@ void CItemPosition::MyRenderObjectScreen(int Type, int ItemLevel, int Option1, f
 
 		BMD_Animation(b, BoneTransform, ObjectSelect_AnimationFrame, ObjectSelect_PriorAnimationFrame, ObjectSelect_PriorAction, ObjectSelect_Angle, ObjectSelect_HeadAngle, false, false);
 
-		DWORD o = CreateObject(Type, Position, ObjectSelect_Angle, Scale);
+		BYTE Armor[444]; // sizeof(OBJECT)
+		memset(Armor, 0, sizeof(Armor));
+
+		DWORD o = (DWORD)Armor;
 
 		*(short*)(o + 0x2) = Type; // o->Type = Type;
 
