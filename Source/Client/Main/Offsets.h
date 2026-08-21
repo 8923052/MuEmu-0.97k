@@ -173,6 +173,7 @@
 #define PathFinding2 ((bool(_cdecl*)(int sx, int sy, int tx, int ty, DWORD a, float fDistance)) 0x0043F3E0)
 #define PlayerPosition (&*(float*)(Hero + 16))
 #define CreateChat ((void(_cdecl*)(char *ID, const char *Text, DWORD Owner, int Flag, int SetColor)) 0x00481BA0)
+#define SendMove ((void(_cdecl*)(DWORD c, DWORD o)) 0x00491C40)
 
 // Item
 #define SendRequestEquipmentItem ((bool(_cdecl*)(int SrcFlag, int SrcIndex, int DstFlag, int DstIndex)) 0x0043C250)

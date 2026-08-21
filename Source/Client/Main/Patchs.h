@@ -22,7 +22,7 @@ private:
 
 	static void IgnoreRandomStuck(DWORD c, DWORD Damage);
 
-	static void FixChasingAttackMovement();
+	static bool FixChasingAttackMovement(int sx, int sy, int tx, int ty, DWORD a, float fDistance);
 
 	static void FixWeaponGlow();
 

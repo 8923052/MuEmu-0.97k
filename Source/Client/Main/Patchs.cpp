@@ -127,7 +127,10 @@ void CPatchs::Init()
 
 	SetCompleteHook(0xE8, 0x0042B33D, &this->IgnoreRandomStuck);
 
-	SetCompleteHook(0xE9, 0x00483AC5, &this->FixChasingAttackMovement);
+	SetCompleteHook(0xE8, 0x00483AB2, &this->FixChasingAttackMovement); // BK
+	SetCompleteHook(0xE8, 0x0049EFF5, &this->FixChasingAttackMovement); // Elf
+	SetCompleteHook(0xE8, 0x004A5C7C, &this->FixChasingAttackMovement); // SM (Mana Shield)
+	SetCompleteHook(0xE8, 0x004A85C6, &this->FixChasingAttackMovement); // SM
 
 	SetCompleteHook(0xE9, 0x004292BC, &this->FixWeaponGlow);
 
@@ -302,20 +305,16 @@ void CPatchs::IgnoreRandomStuck(DWORD c, DWORD Damage)
 	}
 }
 
-_declspec(naked) void CPatchs::FixChasingAttackMovement()
+bool CPatchs::FixChasingAttackMovement(int sx, int sy, int tx, int ty, DWORD a, float fDistance)
 {
-	static DWORD jmpBack = 0x00483ACC;
-	static DWORD SendMove = 0x00491C40;
-
-	_asm
+	if (PathFinding2(sx, sy, tx, ty, a, fDistance))
 	{
-		Mov Byte Ptr[Ebp + 0x2ED], 5;
-		Push Ebp;
-		Push Ebp;
-		Call[SendMove];
-		Add Esp, 0x8;
-		Jmp jmpBack;
+		SendMove(Hero, Hero);
+
+		return true;
 	}
+
+	return false;
 }
 
 _declspec(naked) void CPatchs::FixWeaponGlow()

@@ -217,12 +217,12 @@ int CPacketManager::EncryptBlock(BYTE* lpTarget, BYTE* lpSource, int size)
 	{
 		EncBuffer[n] = (((this->m_Encryption.Xor[n] ^ ((WORD*)lpTempSource)[n]) ^ EncValue) * this->m_Encryption.Key[n]) % this->m_Encryption.Modulus[n];
 
-		EncValue = (WORD)EncBuffer[n];
+		EncValue = EncBuffer[n] & 0xFFFF;
 	}
 
 	for (int n = 0; n < 3; n++)
 	{
-		EncBuffer[n] = (EncBuffer[n] ^ this->m_Encryption.Xor[n]) ^ (WORD)EncBuffer[n + 1];
+		EncBuffer[n] = (EncBuffer[n] ^ this->m_Encryption.Xor[n]) ^ (EncBuffer[n + 1] & 0xFFFF);
 	}
 
 	int BitPos = 0;
@@ -309,7 +309,7 @@ int CPacketManager::DecryptBlock(BYTE* lpTarget, BYTE* lpSource)
 
 	for (int n = 2; n >= 0; n--)
 	{
-		DecBuffer[n] = (DecBuffer[n] ^ this->m_Decryption.Xor[n]) ^ (WORD)DecBuffer[n + 1];
+		DecBuffer[n] = (DecBuffer[n] ^ this->m_Decryption.Xor[n]) ^ (DecBuffer[n + 1] & 0xFFFF);
 	}
 
 	DWORD value = 0;
@@ -318,7 +318,7 @@ int CPacketManager::DecryptBlock(BYTE* lpTarget, BYTE* lpSource)
 	{
 		((WORD*)lpTempTarget)[n] = (WORD)((((this->m_Decryption.Key[n] * DecBuffer[n]) % this->m_Decryption.Modulus[n]) ^ this->m_Decryption.Xor[n]) ^ value);
 
-		value = (WORD)DecBuffer[n];
+		value = (DecBuffer[n] & 0xFFFF);
 	}
 
 	DecBuffer[0] = 0;
@@ -398,7 +398,11 @@ void CPacketManager::Shift(BYTE* lpBuff, int size, int ShiftSize)
 			{
 				for (int n = (size - 1); n > 0; n--)
 				{
-					lpTempBuff[n] = (lpTempBuff[n - 1] << (8 - ShiftSize)) | (lpTempBuff[n] >> ShiftSize);
+					int value =
+						(lpTempBuff[n - 1] << (8 - ShiftSize)) |
+						(lpTempBuff[n] >> ShiftSize);
+
+					lpTempBuff[n] = value & 0xFF;
 				}
 			}
 
@@ -412,7 +416,11 @@ void CPacketManager::Shift(BYTE* lpBuff, int size, int ShiftSize)
 			{
 				for (int n = 0; n < (size - 1); n++)
 				{
-					lpTempBuff[n] = (lpTempBuff[n + 1] >> (8 - ShiftSize)) | (lpTempBuff[n] << ShiftSize);
+					int value =
+						(lpTempBuff[n + 1] >> (8 - ShiftSize)) |
+						(lpTempBuff[n] << ShiftSize);
+
+					lpTempBuff[n] = value & 0xFF;
 				}
 			}
 
